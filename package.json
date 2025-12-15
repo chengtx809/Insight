@@ -6,7 +6,11 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "docker:build": "docker build -t wujun-article-generator:local .",
+    "docker:run": "docker run -d --name wujun-generator-local -p 3000:80 wujun-article-generator:local",
+    "docker:stop": "docker stop wujun-generator-local && docker rm wujun-generator-local",
+    "docker:logs": "docker logs wujun-generator-local"
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.19",

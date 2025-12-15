@@ -1,5 +1,9 @@
 # 见微
 
+[![Docker Build](https://github.com/你的用户名/wujun-article-generator/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/你的用户名/wujun-article-generator/actions/workflows/docker-publish.yml)
+[![Release](https://github.com/你的用户名/wujun-article-generator/actions/workflows/release.yml/badge.svg)](https://github.com/你的用户名/wujun-article-generator/actions/workflows/release.yml)
+[![Docker Image](https://ghcr-badge.deta.dev/你的用户名/wujun-article-generator/latest_tag?trim=major&label=Docker%20Image)](https://github.com/你的用户名/wujun-article-generator/pkgs/container/wujun-article-generator)
+
 一个基于《数学之美》写作风格的AI教学文章生成工具，帮助用户创作深度、有趣、富有启发性的技术教学文章。
 
 - “见微”取自成语“见微知著”，意为通过微小的细节（生活中的例子、轶事）洞察宏大的道理。这正是吴军老师擅长的"用生活化类比讲解抽象概念"的风格。
@@ -23,21 +27,46 @@
 
 ## 🚀 快速开始
 
-### 环境要求
+### 方式一：Docker 部署（推荐）
+
+#### 使用预构建镜像
+```bash
+# 拉取最新镜像
+docker pull ghcr.io/chengtx809/wujun-article-generator:latest
+
+# 运行容器
+docker run -d -p 3000:80 --name wujun-generator ghcr.io/chengtx809/wujun-article-generator:latest
+```
+
+#### 使用 Docker Compose
+```bash
+# 克隆项目
+git clone https://github.com/你的用户名/wujun-article-generator.git
+cd wujun-article-generator
+
+# 启动服务
+docker-compose up -d
+```
+
+访问 http://localhost:3000 即可使用应用。
+
+### 方式二：本地开发
+
+#### 环境要求
 - Node.js 16+
 - npm 或 yarn
 
-### 安装依赖
+#### 安装依赖
 ```bash
 npm install
 ```
 
-### 启动开发服务器
+#### 启动开发服务器
 ```bash
 npm run dev
 ```
 
-### 构建生产版本
+#### 构建生产版本
 ```bash
 npm run build
 ```
@@ -162,6 +191,18 @@ src/
 - **无服务器依赖**：纯前端应用，无需后端服务
 - **数据控制**：用户完全控制自己的数据
 
+## 🐳 Docker 部署
+
+### 自动构建
+每次推送到 `main` 分支时，GitHub Actions 会自动构建并发布 Docker 镜像到 GitHub Container Registry。
+
+### 部署选项
+- **Docker 单容器**：适合个人使用
+- **Docker Compose**：适合本地开发和测试
+- **Kubernetes**：适合生产环境集群部署
+
+详细部署指南请查看 [DEPLOYMENT.md](DEPLOYMENT.md)
+
 ## 🤝 贡献指南
 
 欢迎提交Issue和Pull Request来改进这个项目！
@@ -173,6 +214,15 @@ src/
 4. 启动开发服务器：`npm run dev`
 5. 创建功能分支进行开发
 6. 提交Pull Request
+
+### Docker 本地测试
+```bash
+# 构建镜像
+docker build -t wujun-article-generator .
+
+# 运行测试
+docker run -d -p 3000:80 wujun-article-generator
+```
 
 ## 📄 许可证
 
