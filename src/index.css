@@ -1,0 +1,247 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-ink-200;
+  }
+  body {
+    @apply bg-paper-100 text-ink-800 antialiased;
+    font-family: 'Noto Serif SC', 'Source Han Serif SC', SimSun, serif;
+    background-image: 
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"),
+      linear-gradient(to bottom right, #fdf8f0, #f9edd8);
+  }
+  
+  /* 滚动条古风样式 */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-paper-200;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-ink-300 rounded;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-ink-400;
+  }
+}
+
+@layer components {
+  /* 古卷卡片样式 */
+  .scroll-card {
+    @apply bg-paper-50 border-2 border-ink-200 shadow-scroll;
+    background-image: 
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.02'/%3E%3C/svg%3E");
+    position: relative;
+  }
+  
+  .scroll-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(to right, transparent, #d4a574, transparent);
+  }
+  
+  .scroll-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(to right, transparent, #d4a574, transparent);
+  }
+  
+  /* 主按钮 - 朱砂印章风格 */
+  .btn-primary {
+    @apply bg-vermilion-500 hover:bg-vermilion-600 text-paper-50 font-serif font-medium px-6 py-3 transition-all duration-300;
+    border: 2px solid transparent;
+    position: relative;
+    box-shadow: 2px 2px 8px rgba(199, 60, 51, 0.25);
+  }
+  
+  .btn-primary:hover {
+    box-shadow: 3px 3px 12px rgba(199, 60, 51, 0.35);
+    transform: translateY(-1px);
+  }
+  
+  .btn-primary:disabled {
+    @apply bg-ink-300 cursor-not-allowed;
+    box-shadow: none;
+    transform: none;
+  }
+  
+  /* 次要按钮 - 墨色边框风格 */
+  .btn-secondary {
+    @apply bg-paper-50 hover:bg-paper-100 text-ink-700 border-2 border-ink-300 hover:border-ink-400 font-serif font-medium px-6 py-3 transition-all duration-200;
+  }
+  
+  /* 输入框 - 宣纸风格 */
+  .input-field {
+    @apply w-full px-4 py-3 border-2 border-ink-200 focus:border-ink-400 focus:ring-2 focus:ring-ink-200 transition-all duration-200 bg-paper-50 font-serif text-ink-800;
+    outline: none;
+  }
+  
+  .input-field::placeholder {
+    @apply text-ink-400 font-normal;
+  }
+  
+  .textarea-field {
+    @apply w-full px-4 py-3 border-2 border-ink-200 focus:border-ink-400 focus:ring-2 focus:ring-ink-200 transition-all duration-200 bg-paper-50 font-serif text-ink-800 resize-none;
+    outline: none;
+  }
+  
+  .textarea-field::placeholder {
+    @apply text-ink-400 font-normal;
+  }
+
+  /* 古书分隔线 */
+  .divider-classic {
+    @apply relative my-6;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #b8ada0, transparent);
+  }
+  
+  .divider-classic::before {
+    content: '◆';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    @apply text-ink-400 bg-paper-50 px-3 text-sm;
+  }
+
+  /* 印章装饰 */
+  .seal-decoration {
+    @apply inline-block text-vermilion-500 border-2 border-vermilion-500 px-2 py-1 font-kai text-sm;
+    transform: rotate(-3deg);
+    box-shadow: 2px 2px 4px rgba(199, 60, 51, 0.2);
+  }
+
+  /* Markdown 古书渲染样式 */
+  .prose-classic {
+    @apply text-ink-700 font-serif;
+    line-height: 2;
+  }
+  
+  .prose-classic h1 {
+    @apply text-ink-900 font-bold text-2xl mb-6 pb-4 text-center;
+    border-bottom: 2px solid;
+    border-image: linear-gradient(to right, transparent, #7d6e5d, transparent) 1;
+  }
+  
+  .prose-classic h2 {
+    @apply text-ink-800 font-semibold text-xl mt-10 mb-4 pl-4;
+    border-left: 4px solid #c73c33;
+  }
+  
+  .prose-classic h3 {
+    @apply text-ink-800 font-semibold text-lg mt-8 mb-3;
+    position: relative;
+  }
+  
+  .prose-classic h3::before {
+    content: '◇';
+    @apply text-vermilion-500 mr-2;
+  }
+  
+  .prose-classic p {
+    @apply leading-loose mb-5 text-justify;
+    text-indent: 2em;
+  }
+  
+  .prose-classic blockquote {
+    @apply border-l-4 border-ink-400 bg-paper-200/50 pl-5 py-3 my-6 italic text-ink-600;
+    position: relative;
+  }
+  
+  .prose-classic blockquote::before {
+    content: '"';
+    @apply text-4xl text-ink-300 absolute -left-1 -top-2 font-kai;
+  }
+  
+  .prose-classic code {
+    @apply bg-paper-200 text-vermilion-600 px-2 py-0.5 text-sm font-mono border border-ink-200;
+  }
+  
+  .prose-classic pre {
+    @apply bg-paper-200 border-2 border-ink-200 p-4 overflow-x-auto my-6;
+  }
+  
+  .prose-classic pre code {
+    @apply bg-transparent text-ink-700 p-0 border-0;
+  }
+  
+  .prose-classic ul, .prose-classic ol {
+    @apply space-y-2 my-4 pl-6;
+  }
+  
+  .prose-classic li {
+    @apply text-ink-700;
+  }
+  
+  .prose-classic ul li::marker {
+    @apply text-vermilion-500;
+  }
+  
+  .prose-classic ol li::marker {
+    @apply text-vermilion-500 font-bold;
+  }
+  
+  .prose-classic strong {
+    @apply text-ink-900 font-bold;
+  }
+  
+  .prose-classic em {
+    @apply text-ink-600 not-italic;
+    text-decoration: underline;
+    text-decoration-style: wavy;
+    text-decoration-color: #c73c33;
+    text-underline-offset: 4px;
+  }
+  
+  .prose-classic a {
+    @apply text-jade-600 hover:text-jade-700 underline;
+  }
+  
+  .prose-classic hr {
+    @apply my-8 border-0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #b8ada0, transparent);
+  }
+
+  /* 标签样式 */
+  .tag-classic {
+    @apply text-xs px-3 py-1 bg-paper-200 text-ink-600 border border-ink-300 font-serif;
+  }
+  
+  .tag-classic:hover {
+    @apply bg-paper-300 border-ink-400;
+  }
+}
+
+/* 古风动画效果 */
+@keyframes inkDrop {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-ink-drop {
+  animation: inkDrop 0.5s ease-out;
+}
