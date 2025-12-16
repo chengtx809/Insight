@@ -1,8 +1,6 @@
 name: Release
 
 on:
-  push:
-    branches: [ main, master ]
   workflow_dispatch:
     inputs:
       version:
@@ -18,78 +16,42 @@ jobs:
       packages: write
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
 
-    - name: Install dependencies
-      run: npm ci
+      - name: Install dependencies
+        run: npm ci
 
-    - name: Build project
-      run: npm run build
+      - name: Build project
+        run: npm run build
 
-    - name: Get version from package.json
-      id: package-version
-      run: echo "version=v$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.inputs.version }}
+          release_name: Release ${{ github.event.inputs.version }}
+          body: |
+            ## 🚀 新版本发布
 
-    - name: Create Release
-      if: github.event_name == 'push'
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ steps.package-version.outputs.version }}
-        release_name: Release ${{ steps.package-version.outputs.version }}
-        body: |
-          ## 🚀 新版本发布
+            ### 📦 Docker 镜像
+            ```bash
+            docker pull ghcr.io/${{ github.repository }}:${{ github.event.inputs.version }}
+            docker pull ghcr.io/${{ github.repository }}:latest
+            ```
 
-          ### 📦 Docker 镜像
-          ```bash
-          docker pull ghcr.io/${{ github.repository }}:${{ steps.package-version.outputs.version }}
-          docker pull ghcr.io/${{ github.repository }}:latest
-          ```
-
-          ### 🔧 快速部署
-          ```bash
-          docker run -d -p 80:80 ghcr.io/${{ github.repository }}:latest
-          ```
-
-          ### 📝 更新内容
-          - 自动生成的发布版本
-          - 包含最新的功能和修复
-
-          ---
-          **完整更新日志请查看提交历史**
-        draft: false
-        prerelease: false
-
-    - name: Manual Release
-      if: github.event_name == 'workflow_dispatch'
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.event.inputs.version }}
-        release_name: Release ${{ github.event.inputs.version }}
-        body: |
-          ## 🚀 手动发布版本
-
-          ### 📦 Docker 镜像
-          ```bash
-          docker pull ghcr.io/${{ github.repository }}:${{ github.event.inputs.version }}
-          docker pull ghcr.io/${{ github.repository }}:latest
-          ```
-
-          ### 🔧 快速部署
-          ```bash
-          docker run -d -p 80:80 ghcr.io/${{ github.repository }}:latest
-          ```
-        draft: false
-        prerelease: false
+            ### 🔧 快速部署
+            ```bash
+            docker run -d -p 80:80 ghcr.io/${{ github.repository }}:latest
+            ```
+          draft: false
+          prerelease: false

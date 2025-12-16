@@ -50,7 +50,17 @@ docker-compose up -d
 
 访问 http://localhost:3000 即可使用应用。
 
-### 方式二：本地开发
+### 方式二：Vercel 部署（最简单）
+
+1. Fork 本仓库到你的 GitHub 账号
+2. 登录 [Vercel](https://vercel.com)
+3. 点击 "Add New Project"，导入你 Fork 的仓库
+4. 保持默认设置，点击 "Deploy"
+5. 等待部署完成，即可通过 Vercel 分配的域名访问
+
+> Vercel 会自动检测 Vite 项目并配置构建命令，无需额外设置。
+
+### 方式三：本地开发
 
 #### 环境要求
 - Node.js 16+
