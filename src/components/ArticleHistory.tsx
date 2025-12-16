@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { History, Search, Download, Trash2, Calendar, FileText, Eye } from 'lucide-react';
+import { History, Search, Download, Trash2, Calendar, FileText } from 'lucide-react';
 import { GeneratedArticle } from '../types';
 import { downloadUtils } from '../utils/download';
 import { format } from 'date-fns';
@@ -146,13 +146,18 @@ export const ArticleHistory: React.FC<Props> = ({
         {filteredArticles.map((article) => (
           <div
             key={article.id}
-            className="border-2 border-ink-200 p-4 hover:border-ink-300 transition-colors bg-paper-50"
+            onClick={() => onSelectArticle(article)}
+            className="border-2 border-ink-200 p-4 hover:border-vermilion-400 hover:bg-paper-100 transition-colors bg-paper-50 cursor-pointer"
           >
             <div className="flex items-start gap-3">
               <input
                 type="checkbox"
                 checked={selectedArticles.has(article.id)}
-                onChange={() => handleSelectArticle(article.id)}
+                onChange={(e) => {
+                  e.stopPropagation();
+                  handleSelectArticle(article.id);
+                }}
+                onClick={(e) => e.stopPropagation()}
                 className="mt-1 rounded border-ink-300 text-vermilion-500 focus:ring-vermilion-300"
               />
               
@@ -178,35 +183,18 @@ export const ArticleHistory: React.FC<Props> = ({
                 </div>
               </div>
               
-              <div className="flex gap-2">
-                <button
-                  onClick={() => onSelectArticle(article)}
-                  className="p-2 text-ink-400 hover:text-vermilion-600 hover:bg-vermilion-50 transition-colors"
-                  title="查看文章"
-                >
-                  <Eye className="w-4 h-4" />
-                </button>
-                
-                <button
-                  onClick={() => downloadUtils.downloadAsMarkdown(article)}
-                  className="p-2 text-ink-400 hover:text-jade-600 hover:bg-jade-50 transition-colors"
-                  title="下载文章"
-                >
-                  <Download className="w-4 h-4" />
-                </button>
-                
-                <button
-                  onClick={() => {
-                    if (window.confirm('确定要删除这篇文章吗？')) {
-                      onDeleteArticle(article.id);
-                    }
-                  }}
-                  className="p-2 text-ink-400 hover:text-vermilion-600 hover:bg-vermilion-50 transition-colors"
-                  title="删除文章"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (window.confirm('确定要删除这篇文章吗？')) {
+                    onDeleteArticle(article.id);
+                  }
+                }}
+                className="p-2 text-ink-400 hover:text-vermilion-600 hover:bg-vermilion-50 transition-colors"
+                title="删除文章"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
             </div>
           </div>
         ))}

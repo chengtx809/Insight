@@ -33,7 +33,8 @@ function App() {
   });
 
   const [articles, setArticles] = useState<GeneratedArticle[]>([]);
-  const [currentArticle, setCurrentArticle] = useState<GeneratedArticle | null>(null);
+  const [generatedArticle, setGeneratedArticle] = useState<GeneratedArticle | null>(null);
+  const [historyViewArticle, setHistoryViewArticle] = useState<GeneratedArticle | null>(null);
 
   // 初始化数据
   useEffect(() => {
@@ -97,7 +98,7 @@ function App() {
       // 保存文章
       storageUtils.saveArticle(article);
       setArticles(prev => [article, ...prev]);
-      setCurrentArticle(article);
+      setGeneratedArticle(article);
 
       setGenerationStatus({
         isGenerating: false,
@@ -126,8 +127,11 @@ function App() {
   const handleDeleteArticle = (id: string) => {
     storageUtils.deleteArticle(id);
     setArticles(prev => prev.filter(article => article.id !== id));
-    if (currentArticle?.id === id) {
-      setCurrentArticle(null);
+    if (historyViewArticle?.id === id) {
+      setHistoryViewArticle(null);
+    }
+    if (generatedArticle?.id === id) {
+      setGeneratedArticle(null);
     }
   };
 
@@ -135,12 +139,12 @@ function App() {
   const handleClearAllArticles = () => {
     storageUtils.clearAllArticles();
     setArticles([]);
-    setCurrentArticle(null);
+    setHistoryViewArticle(null);
   };
 
-  // 选择文章查看
+  // 选择历史文章查看
   const handleSelectArticle = (article: GeneratedArticle) => {
-    setCurrentArticle(article);
+    setHistoryViewArticle(article);
   };
 
   const tabs = [
@@ -241,10 +245,10 @@ function App() {
 
           {/* 右侧内容区域 */}
           <div className="lg:col-span-2">
-            {activeTab === 'history' && currentArticle ? (
-              <ArticleViewer article={currentArticle} />
-            ) : currentArticle && activeTab === 'generate' ? (
-              <ArticleViewer article={currentArticle} />
+            {activeTab === 'history' && historyViewArticle ? (
+              <ArticleViewer article={historyViewArticle} />
+            ) : activeTab === 'generate' && generatedArticle ? (
+              <ArticleViewer article={generatedArticle} />
             ) : generationStatus.streamingContent && generationStatus.isGenerating ? (
               // 显示流式生成的实时内容
               <div className="scroll-card rounded-none p-8">
