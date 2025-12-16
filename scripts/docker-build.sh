@@ -7,7 +7,7 @@ set -e
 echo "🐳 开始构建 Docker 镜像..."
 
 # 构建镜像
-docker build -t wujun-article-generator:local .
+docker build -t insight:local .
 
 echo "✅ 镜像构建完成"
 
@@ -18,19 +18,19 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo "🚀 启动容器..."
     
     # 停止并删除已存在的容器
-    docker stop wujun-generator-local 2>/dev/null || true
-    docker rm wujun-generator-local 2>/dev/null || true
+    docker stop insight-local 2>/dev/null || true
+    docker rm insight-local 2>/dev/null || true
     
     # 运行新容器
     docker run -d \
-        --name wujun-generator-local \
+        --name insight-local \
         -p 3000:80 \
-        wujun-article-generator:local
+        insight:local
     
     echo "✅ 容器已启动"
     echo "🌐 访问地址: http://localhost:3000"
-    echo "📋 容器名称: wujun-generator-local"
+    echo "📋 容器名称: insight-local"
     echo ""
-    echo "查看日志: docker logs wujun-generator-local"
-    echo "停止容器: docker stop wujun-generator-local"
+    echo "查看日志: docker logs insight-local"
+    echo "停止容器: docker stop insight-local"
 fi

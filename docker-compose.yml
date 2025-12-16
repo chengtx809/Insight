@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  wujun-article-generator:
+  insight:
     build: .
     ports:
       - "3000:80"
@@ -10,8 +10,8 @@ services:
       - NODE_ENV=production
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.wujun-generator.rule=Host(`localhost`)"
-      - "traefik.http.services.wujun-generator.loadbalancer.server.port=80"
+      - "traefik.http.routers.insight.rule=Host(`localhost`)"
+      - "traefik.http.services.insight.loadbalancer.server.port=80"
 
   # 可选：添加 Traefik 反向代理
   # traefik:

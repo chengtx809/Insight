@@ -1,8 +1,8 @@
 # 见微
 
-[![Docker Build](https://github.com/你的用户名/wujun-article-generator/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/你的用户名/wujun-article-generator/actions/workflows/docker-publish.yml)
-[![Release](https://github.com/你的用户名/wujun-article-generator/actions/workflows/release.yml/badge.svg)](https://github.com/你的用户名/wujun-article-generator/actions/workflows/release.yml)
-[![Docker Image](https://ghcr-badge.deta.dev/你的用户名/wujun-article-generator/latest_tag?trim=major&label=Docker%20Image)](https://github.com/你的用户名/wujun-article-generator/pkgs/container/wujun-article-generator)
+[![Docker Build](https://github.com/chengtx809/insight/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/chengtx809/insight/actions/workflows/docker-publish.yml)
+[![Release](https://github.com/chengtx809/insight/actions/workflows/release.yml/badge.svg)](https://github.com/chengtx809/insight/actions/workflows/release.yml)
+[![Docker Image](https://ghcr-badge.deta.dev/chengtx809/insight/latest_tag?trim=major&label=Docker%20Image)](https://github.com/chengtx809/insight/pkgs/container/insight)
 
 一个基于《数学之美》写作风格的AI教学文章生成工具，帮助用户创作深度、有趣、富有启发性的技术教学文章。
 
@@ -32,17 +32,17 @@
 #### 使用预构建镜像
 ```bash
 # 拉取最新镜像
-docker pull ghcr.io/chengtx809/wujun-article-generator:latest
+docker pull ghcr.io/chengtx809/insight:latest
 
 # 运行容器
-docker run -d -p 3000:80 --name wujun-generator ghcr.io/chengtx809/wujun-article-generator:latest
+docker run -d -p 3000:80 --name insight ghcr.io/chengtx809/insight:latest
 ```
 
 #### 使用 Docker Compose
 ```bash
 # 克隆项目
-git clone https://github.com/你的用户名/wujun-article-generator.git
-cd wujun-article-generator
+git clone https://github.com/chengtx809/insight.git
+cd insight
 
 # 启动服务
 docker-compose up -d
@@ -218,10 +218,10 @@ src/
 ### Docker 本地测试
 ```bash
 # 构建镜像
-docker build -t wujun-article-generator .
+docker build -t insight .
 
 # 运行测试
-docker run -d -p 3000:80 wujun-article-generator
+docker run -d -p 3000:80 insight
 ```
 
 ## 📄 许可证

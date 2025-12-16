@@ -11,12 +11,12 @@
 
 ### 拉取最新镜像
 ```bash
-docker pull ghcr.io/你的用户名/wujun-article-generator:latest
+docker pull ghcr.io/你的用户名/insight:latest
 ```
 
 ### 运行容器
 ```bash
-docker run -d -p 3000:80 --name wujun-generator ghcr.io/你的用户名/wujun-article-generator:latest
+docker run -d -p 3000:80 --name insight ghcr.io/你的用户名/insight:latest
 ```
 
 访问 http://localhost:3000 即可使用应用。
@@ -37,12 +37,12 @@ docker-compose down
 
 ### 构建镜像
 ```bash
-docker build -t wujun-article-generator .
+docker build -t insight .
 ```
 
 ### 运行本地镜像
 ```bash
-docker run -d -p 3000:80 wujun-article-generator
+docker run -d -p 3000:80 insight
 ```
 
 ## 🌐 生产环境部署
@@ -50,20 +50,20 @@ docker run -d -p 3000:80 wujun-article-generator
 ### 1. 使用 Docker
 ```bash
 # 拉取最新镜像
-docker pull ghcr.io/你的用户名/wujun-article-generator:latest
+docker pull ghcr.io/你的用户名/insight:latest
 
 # 运行容器（生产环境）
 docker run -d \
-  --name wujun-generator \
+  --name insight \
   --restart unless-stopped \
   -p 80:80 \
-  ghcr.io/你的用户名/wujun-article-generator:latest
+  ghcr.io/你的用户名/insight:latest
 ```
 
 ### 2. 使用 Docker Compose（推荐）
 ```bash
 # 下载 docker-compose.yml
-wget https://raw.githubusercontent.com/你的用户名/wujun-article-generator/main/docker-compose.yml
+wget https://raw.githubusercontent.com/你的用户名/insight/main/docker-compose.yml
 
 # 启动服务
 docker-compose up -d
@@ -74,30 +74,30 @@ docker-compose up -d
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: wujun-generator
+  name: insight
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: wujun-generator
+      app: insight
   template:
     metadata:
       labels:
-        app: wujun-generator
+        app: insight
     spec:
       containers:
-      - name: wujun-generator
-        image: ghcr.io/你的用户名/wujun-article-generator:latest
+      - name: insight
+        image: ghcr.io/你的用户名/insight:latest
         ports:
         - containerPort: 80
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: wujun-generator-service
+  name: insight-service
 spec:
   selector:
-    app: wujun-generator
+    app: insight
   ports:
   - port: 80
     targetPort: 80
@@ -151,13 +151,13 @@ docker ps | grep wujun-generator
 1. **端口冲突**
    ```bash
    # 使用不同端口
-   docker run -d -p 8080:80 ghcr.io/你的用户名/wujun-article-generator:latest
+   docker run -d -p 8080:80 ghcr.io/你的用户名/insight:latest
    ```
 
 2. **镜像拉取失败**
    ```bash
    # 检查网络连接
-   docker pull ghcr.io/你的用户名/wujun-article-generator:latest
+   docker pull ghcr.io/你的用户名/insight:latest
    ```
 
 3. **容器启动失败**
@@ -169,14 +169,14 @@ docker ps | grep wujun-generator
 ### 重新部署
 ```bash
 # 停止并删除旧容器
-docker stop wujun-generator
-docker rm wujun-generator
+docker stop insight
+docker rm insight
 
 # 拉取最新镜像
-docker pull ghcr.io/你的用户名/wujun-article-generator:latest
+docker pull ghcr.io/你的用户名/insight:latest
 
 # 启动新容器
-docker run -d -p 3000:80 --name wujun-generator ghcr.io/你的用户名/wujun-article-generator:latest
+docker run -d -p 3000:80 --name insight ghcr.io/你的用户名/insight:latest
 ```
 
 ## 📈 性能优化
