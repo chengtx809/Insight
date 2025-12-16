@@ -1,5 +1,13 @@
 import { GeneratedArticle } from '../types';
 import { format } from 'date-fns';
+import { marked } from 'marked';
+import katex from 'katex';
+
+// 清理文件名，保留中文字符
+const sanitizeFilename = (filename: string): string => {
+  // 移除文件系统不允许的字符: \ / : * ? " < > |
+  return filename.replace(/[\\/:*?"<>|]/g, '').trim() || '未命名文章';
+};
 
 export const downloadUtils = {
   // 下载单篇文章为Markdown
@@ -24,7 +32,7 @@ ${article.content}
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${article.title.replace(/[^\w\s-]/g, '').trim()}.md`;
+    link.download = `${sanitizeFilename(article.title)}.md`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -33,12 +41,38 @@ ${article.content}
 
   // 下载为HTML
   downloadAsHTML: (article: GeneratedArticle): void => {
+    // 预处理 LaTeX 公式
+    const processLatex = (content: string): string => {
+      // 处理块级公式 $$...$$
+      content = content.replace(/\$\$([\s\S]*?)\$\$/g, (_, math) => {
+        try {
+          return `<div class="math-block">${katex.renderToString(math.trim(), { displayMode: true, throwOnError: false })}</div>`;
+        } catch {
+          return `<div class="math-block math-error">$$${math}$$</div>`;
+        }
+      });
+      // 处理行内公式 $...$
+      content = content.replace(/\$([^\$\n]+?)\$/g, (_, math) => {
+        try {
+          return katex.renderToString(math.trim(), { displayMode: false, throwOnError: false });
+        } catch {
+          return `<span class="math-error">$${math}$</span>`;
+        }
+      });
+      return content;
+    };
+
+    // 先处理 LaTeX，再转换 Markdown
+    const processedContent = processLatex(article.content);
+    const renderedContent = marked.parse(processedContent) as string;
+    
     const htmlContent = `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>${article.title}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
@@ -65,9 +99,48 @@ ${article.content}
             font-size: 0.9em;
         }
         .content {
-            white-space: pre-wrap;
             font-size: 1.1em;
         }
+        .content h1, .content h2, .content h3 {
+            color: #1a202c;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+        .content h1 { font-size: 1.8em; border-bottom: 1px solid #e1e5e9; padding-bottom: 0.3em; }
+        .content h2 { font-size: 1.5em; }
+        .content h3 { font-size: 1.2em; }
+        .content p { margin: 1em 0; text-indent: 2em; text-align: justify; }
+        .content ul, .content ol { margin: 1em 0; padding-left: 2em; }
+        .content li { margin: 0.5em 0; }
+        .content blockquote {
+            border-left: 4px solid #ddd;
+            margin: 1em 0;
+            padding: 0.5em 1em;
+            color: #666;
+            background: #f9f9f9;
+        }
+        .content code {
+            background: #f4f4f4;
+            padding: 0.2em 0.4em;
+            border-radius: 3px;
+            font-family: Consolas, Monaco, 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        .content pre {
+            background: #f4f4f4;
+            padding: 1em;
+            overflow-x: auto;
+            border-radius: 5px;
+        }
+        .content pre code {
+            background: none;
+            padding: 0;
+        }
+        .content strong { font-weight: 600; }
+        .content em { font-style: italic; }
+        .content hr { border: none; border-top: 1px solid #e1e5e9; margin: 2em 0; }
+        .math-block { text-align: center; margin: 1.5em 0; overflow-x: auto; }
+        .math-error { color: #c00; background: #fee; padding: 0.2em 0.4em; }
         .footer {
             margin-top: 40px;
             padding-top: 20px;
@@ -87,7 +160,7 @@ ${article.content}
             字数: ${article.wordCount}
         </div>
     </div>
-    <div class="content">${article.content.replace(/\n/g, '<br>')}</div>
+    <div class="content">${renderedContent}</div>
     <div class="footer">
         本文由吴军笔风教学文章生成器生成
     </div>
@@ -98,7 +171,7 @@ ${article.content}
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${article.title.replace(/[^\w\s-]/g, '').trim()}.html`;
+    link.download = `${sanitizeFilename(article.title)}.html`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

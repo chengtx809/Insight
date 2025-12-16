@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Copy, Eye, EyeOff, FileText, Globe } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
 import { GeneratedArticle } from '../types';
 import { downloadUtils } from '../utils/download';
 import { format } from 'date-fns';
@@ -44,7 +47,8 @@ export const ArticleViewer: React.FC<Props> = ({ article }) => {
       <div className="mb-8">
         <div className="prose-classic max-w-none">
           <ReactMarkdown 
-            remarkPlugins={[remarkGfm]}
+            remarkPlugins={[remarkGfm, remarkMath]}
+            rehypePlugins={[rehypeKatex]}
             components={{
               // 自定义代码块样式
               code: ({ node, className, children, ...props }: any) => {
