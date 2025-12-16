@@ -74,36 +74,50 @@ export const LLMConfigForm: React.FC<Props> = ({ config, onChange }) => {
     });
   };
 
-  // 从完整端点提取基础域名
-  const getBaseDomain = (endpoint: string): string => {
-    if (!endpoint) return '';
+  // 判断URL是否只是域名（没有路径）
+  const isOnlyDomain = (url: string): boolean => {
+    if (!url) return false;
     try {
-      const url = new URL(endpoint);
-      return `${url.protocol}//${url.host}`;
+      const parsed = new URL(url);
+      // 如果pathname只是 "/" 或为空，说明只有域名
+      return parsed.pathname === '/' || parsed.pathname === '';
     } catch {
-      // 如果不是完整URL，可能用户输入的就是基础域名
-      if (endpoint.startsWith('http')) {
-        return endpoint;
-      }
-      return `https://${endpoint}`;
+      // 不是有效URL，检查是否包含路径
+      const withoutProtocol = url.replace(/^https?:\/\//, '');
+      return !withoutProtocol.includes('/');
     }
   };
 
-  // 从基础域名生成完整端点
-  const getFullEndpoint = (baseDomain: string): string => {
-    if (!baseDomain) return '';
-    try {
-      const cleanDomain = baseDomain.replace(/\/+$/, ''); // 移除末尾斜杠
-      return `${cleanDomain}/v1/chat/completions`;
-    } catch {
-      return baseDomain;
+  // 智能处理端点：只有纯域名才补全路径
+  const normalizeEndpoint = (input: string): string => {
+    if (!input) return '';
+    
+    // 确保有协议
+    let url = input;
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = `https://${url}`;
     }
+    
+    // 移除末尾斜杠便于判断
+    const cleanUrl = url.replace(/\/+$/, '');
+    
+    // 如果只是域名，自动补全 /v1/chat/completions
+    if (isOnlyDomain(cleanUrl)) {
+      return `${cleanUrl}/v1/chat/completions`;
+    }
+    
+    // 已有路径，保持原样
+    return cleanUrl;
   };
 
-  // 处理基础域名变化
-  const handleBaseDomainChange = (baseDomain: string) => {
-    const fullEndpoint = getFullEndpoint(baseDomain);
-    handleInputChange('endpoint', fullEndpoint);
+  // 获取显示用的输入值（用户输入的原始值）
+  const getDisplayEndpoint = (endpoint: string): string => {
+    return endpoint || '';
+  };
+
+  // 处理端点变化
+  const handleEndpointChange = (value: string) => {
+    handleInputChange('endpoint', normalizeEndpoint(value));
   };
 
   const testConnection = async () => {
@@ -134,24 +148,27 @@ export const LLMConfigForm: React.FC<Props> = ({ config, onChange }) => {
       </div>
 
       <div className="space-y-4">
-        {/* API基础域名 */}
+        {/* API端点 */}
         <div className="w-full">
           <label className="block text-sm font-medium text-ink-700 mb-2 font-serif">
-            API 基础域名 <span className="text-vermilion-500">*</span>
+            API 端点 <span className="text-vermilion-500">*</span>
           </label>
           <input
             type="url"
-            value={getBaseDomain(config.endpoint)}
-            onChange={(e) => handleBaseDomainChange(e.target.value)}
-            placeholder="https://api.openai.com"
+            value={getDisplayEndpoint(config.endpoint)}
+            onChange={(e) => handleEndpointChange(e.target.value)}
+            placeholder="https://api.openai.com 或完整路径"
             className="input-field"
             required
           />
-          {getBaseDomain(config.endpoint) && (
+          <p className="mt-1 text-xs text-ink-500 font-kai">
+            输入域名自动补全 /v1/chat/completions，输入完整路径则保持原样
+          </p>
+          {config.endpoint && (
             <div className="mt-2 p-2 bg-paper-100 border border-ink-200 rounded text-sm">
               <span className="text-ink-600 font-kai">请求端点预览：</span>
               <div className="text-ink-800 font-mono text-xs break-all mt-1">
-                {getFullEndpoint(getBaseDomain(config.endpoint))}
+                {config.endpoint}
               </div>
             </div>
           )}
