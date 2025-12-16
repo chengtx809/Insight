@@ -141,7 +141,6 @@ function App() {
   // 选择文章查看
   const handleSelectArticle = (article: GeneratedArticle) => {
     setCurrentArticle(article);
-    setActiveTab('generate');
   };
 
   const tabs = [
@@ -163,10 +162,10 @@ function App() {
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-ink-800 font-serif tracking-wider">
-                  吴军笔风文章生成器
+                  见微
                 </h1>
                 <p className="text-sm text-ink-500 font-kai">
-                  承《数学之美》之风，传深度教学之道
+                  见微知著，洞察深意
                 </p>
               </div>
             </div>
@@ -242,7 +241,9 @@ function App() {
 
           {/* 右侧内容区域 */}
           <div className="lg:col-span-2">
-            {currentArticle ? (
+            {activeTab === 'history' && currentArticle ? (
+              <ArticleViewer article={currentArticle} />
+            ) : currentArticle && activeTab === 'generate' ? (
               <ArticleViewer article={currentArticle} />
             ) : generationStatus.streamingContent && generationStatus.isGenerating ? (
               // 显示流式生成的实时内容
@@ -276,11 +277,11 @@ function App() {
                 </div>
                 
                 <h3 className="text-2xl font-bold text-ink-800 mb-4 font-serif">
-                  欢迎使用吴军笔风文章生成器
+                  欢迎使用见微
                 </h3>
                 <p className="text-ink-600 mb-8 max-w-md mx-auto font-kai leading-relaxed">
-                  此乃基于《数学之美》写作风格之AI文章生成工具。
-                  填写知识点主题与目标受众，即可生成深度教学文章。
+                  基于《数学之美》写作风格的AI教学文章生成工具。
+                  用生活化类比讲解抽象概念，见微知著，洞察深意。
                 </p>
                 
                 <div className="divider-classic"></div>
