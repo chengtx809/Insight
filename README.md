@@ -2,7 +2,7 @@
 
 [![Docker Build](https://github.com/chengtx809/insight/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/chengtx809/insight/actions/workflows/docker-publish.yml)
 [![Release](https://github.com/chengtx809/insight/actions/workflows/release.yml/badge.svg)](https://github.com/chengtx809/insight/actions/workflows/release.yml)
-[![Docker Image](https://ghcr-badge.deta.dev/chengtx809/insight/latest_tag?trim=major&label=Docker%20Image)](https://github.com/chengtx809/insight/pkgs/container/insight)
+<img width="1617" height="908" alt="image" src="https://github.com/user-attachments/assets/d8585236-c041-430c-847c-9b4a3c1aa83f" />
 
 一个基于《数学之美》写作风格的AI教学文章生成工具，帮助用户创作深度、有趣、富有启发性的技术教学文章。
 
